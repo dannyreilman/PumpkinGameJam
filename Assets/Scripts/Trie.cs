@@ -82,6 +82,11 @@ public class Trie
         {
             return root.count > 0;
         }
+
+        public List<char> GetValid()
+        {
+            return root.GetValid();
+        }
     }
 
     public Trieiter GetIter()
@@ -94,6 +99,15 @@ public class Trie
     private class TrieNode
     {
         private LinkedList<TrieNode> children;
+        public List<char> GetValid()
+        {
+            List<char> to_return = new List<char>();
+            foreach (var child in children)
+            {
+                to_return.Add(child.data);
+            }
+            return to_return;    
+        }
 
         public int count { private set; get; }
         public char data { private set; get; }

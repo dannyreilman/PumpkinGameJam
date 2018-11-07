@@ -8,9 +8,6 @@ public class LetterGeneration : MonoBehaviour {
 	public char[] letters = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
     'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
 		'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
-	public char[] etoainshrdlu = { 'E', 'T', 'A', 'O', 'I', 'N',
-    'S', 'H', 'R', 'D', 'L'};
-	public char[] vowels = { 'A', 'E', 'I', 'O', 'U' };
 	public float startDelay;
   private float delay;
   private int layer;
@@ -44,34 +41,19 @@ public class LetterGeneration : MonoBehaviour {
 		
 
   void SpawnLetter(){
-    int letterNum = 0;
-    bool etoain = false;
-		bool vowel = false;
-
-		//Choose subset
-    if (Random.Range(0, 10) < 5) {
-      //about 50% chance of being etaoin or vowel subset
-
-			//Additional 20% chance to just be vowel
-			if (Random.Range (0, 5) == 1) {
-				letterNum = Random.Range (0, 5);
-				vowel = true;
-
-			} else {
-				letterNum = Random.Range(0, 11);
-				etoain = true;
-			}
-    }
-		else letterNum = Random.Range (0, 26);
-    
+		List<char> options = LetterTray.instance.GetValid();
+		char letterText = '\0';
+		if(options.Count > 0)
+		{
+			letterText = options[Random.Range(0, options.Count)];
+		}
+		else
+		{
+			letterText = letters[Random.Range(0,26)];
+		}
     //Create letter instance
     GameObject spawned = Instantiate(letterObject, this.transform);
 
-    //Set text
-    char letterText;
-		if (etoain) letterText = etoainshrdlu [letterNum];
-		else if (vowel) letterText = vowels [letterNum];
-    else letterText = letters[letterNum];
     spawned.GetComponent<TextMesh>().text = letterText.ToString();
 
 		spawned.GetComponent<LetterMovement> ().letter = letterText;
