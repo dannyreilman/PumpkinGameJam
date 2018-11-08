@@ -5,9 +5,10 @@ using UnityEngine;
 
 public class LetterTray : MonoBehaviour {
   public static LetterTray instance = null;
+  private static Trie dictionary = null;
+  private static HashSet<string> dictionarySet = null;
 
   public string currString;
-  private Trie dictionary;
   private Trie.Trieiter iter;
 
   public bool AddLetter(char c) {
@@ -23,17 +24,16 @@ public class LetterTray : MonoBehaviour {
 
   //Clears the word and returns whether the word exists
   public bool ClearWord() {
-    Debug.Log(currString);
     bool toReturn = iter.Contains();
 
-        if (toReturn)
+    if (toReturn)
+    {
+        GameController.instance.wordCount += 1;
+        if (currString.Length > GameController.instance.longestWord.Length)
         {
-            GameController.instance.wordCount += 1;
-            if (currString.Length > GameController.instance.longestWord.Length)
-            {
-                GameController.instance.longestWord = currString;
-            }
+            GameController.instance.longestWord = currString;
         }
+    }
 
     currString = "";
     iter = dictionary.GetIter();
@@ -45,13 +45,18 @@ public class LetterTray : MonoBehaviour {
     if(instance == null || instance.Equals(null))
     {
       instance = this;
-      var MytextAsset = Resources.Load("scrabble_lower", typeof(TextAsset)) as TextAsset;
-      char[] charSeparators = new char[] { '\n' };
-      string[] words = MytextAsset.text.Split(charSeparators, StringSplitOptions.RemoveEmptyEntries);
+      if(dictionary == null)
+      {
+        var MytextAsset = Resources.Load("scrabble_lower", typeof(TextAsset)) as TextAsset;
+        char[] charSeparators = new char[] { '\n', '\r', ' ' };
+        List<string> words = new List<string>(MytextAsset.text.Split(charSeparators, StringSplitOptions.RemoveEmptyEntries));
+        
+        Debug.Log(words.Count + " words loaded.");
 
-      dictionary = new Trie();
-      foreach (string s in words) {
-        dictionary.AddWord(s);
+        dictionary = new Trie();
+        foreach (string s in words) {
+          dictionary.AddWord(s);
+        }
       }
 
       currString = "";

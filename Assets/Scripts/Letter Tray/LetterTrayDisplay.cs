@@ -20,14 +20,14 @@ public class LetterTrayDisplay : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (!isBlinking)
-        {
-            if (textBox.text != "Letters Collected:\n" + boat.letterTray.currString.ToUpper())
-            {
-                textBox.text = "Letters Collected:\n" + boat.letterTray.currString.ToUpper();
-                controller.SetTrigger("Bounce");
-            }
-        }
+      if (!isBlinking)
+      {
+          if (textBox.text != "Letters Collected:\n" + boat.letterTray.currString.ToUpper())
+          {
+              textBox.text = "Letters Collected:\n" + boat.letterTray.currString.ToUpper();
+              controller.SetTrigger("Bounce");
+          }
+      }
     }
 
     public void Force()
